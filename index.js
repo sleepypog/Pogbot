@@ -15,7 +15,7 @@ const client = new Client({
 	]
 });
 
-const db = new Sequelize(process.env.DATABASE, {
+const db = new Sequelize(process.env.DATABASE_URL, {
 	logging: false,
 	dialect: "postgres",
 	dialectOptions: {
