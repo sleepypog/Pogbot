@@ -1,11 +1,15 @@
 import { config } from "dotenv";
 import ms from "ms";
-import { Client, GatewayIntentBits, Formatters, PermissionFlagsBits, GuildMember, Collection, EmbedBuilder } from "discord.js";
+import { Client, GatewayIntentBits, codeBlock, Collection, EmbedBuilder } from "discord.js";
 import { Sequelize, DataTypes } from "sequelize";
+import { canManageGuild } from "./utils/permissionUtils.js";
+import { fromArray, toArray } from "./utils/arrayUtils.js";
+
+import fs from "fs/promises";
 
 config();
 
-const awakeListeners = new Collection();
+export const awakeListeners = new Collection();
 
 const client = new Client({
 	intents: [
@@ -58,11 +62,13 @@ const members = db.define("member", {
 	timestamps: false
 });
 
-client.once("ready", () => {
-	console.log(`Logged in as ${client.user.username}!`);
-	console.debug(`Intents: ${client.application.flags.toArray()}`);
+fs.readdir("./src/listeners").then((listeners) => {
+	listeners.forEach(async (listener) => {
+		const { default: module } = await import("./listeners/" + listener);
+		client.addListener(listener.replace(".js", ""), module);
+		console.debug("Registered listener %s", listener);
+	});
 });
-
 /**
  * Temporal command handling
  */
@@ -82,7 +88,7 @@ client.on("messageCreate", async (message) => {
 		// Let's PLEASE get this working with DRY!
 		switch (command) {
 			case "dump": {
-				if (!isAdmin(message.member)) {
+				if (!canManageGuild(message.member)) {
 					await message.reply("This command can only be run by an admin!");
 					break;
 				}
@@ -105,7 +111,7 @@ client.on("messageCreate", async (message) => {
 			}
 
 			case "addtrigger": {
-				if (!isAdmin(message.member)) {
+				if (!canManageGuild(message.member)) {
 					await message.reply("This command can only be run by an admin!");
 					break;
 				}
@@ -145,7 +151,7 @@ client.on("messageCreate", async (message) => {
 			}
 
 			case "remtrigger": {
-				if (!isAdmin(message.member)) {
+				if (!canManageGuild(message.member)) {
 					await message.reply("This command can only be run by an admin!");
 					break;
 				}
@@ -190,7 +196,7 @@ client.on("messageCreate", async (message) => {
 			}
 
 			case "addchannel": {
-				if (!isAdmin(message.member)) {
+				if (!canManageGuild(message.member)) {
 					await message.reply("This command can only be run by an admin!");
 					break;
 				}
@@ -225,7 +231,7 @@ client.on("messageCreate", async (message) => {
 			}
 
 			case "remchannel": {
-				if (!isAdmin(message.member)) {
+				if (!canManageGuild(message.member)) {
 					await message.reply("This command can only be run by an admin!");
 					break;
 				}
@@ -312,7 +318,7 @@ client.on("messageCreate", async (message) => {
 		const triggers = fromArray(guild.getDataValue("triggers"));
 
 		if (!message.author.bot) {
-			if (isAdmin(message.member)) {
+			if (canManageGuild(message.member)) {
 				if (!awakeListeners.has(message.guildId)) {
 					if (triggers.some((trigger) => message.content.toLowerCase().includes(trigger))) {
 						await message.react("👀");
@@ -429,37 +435,13 @@ function parseDuration(milliseconds) {
 }
 
 /**
- * @param {GuildMember} member 
- */
-function isAdmin(member) {
-	return member.permissions.has(PermissionFlagsBits.ManageGuild, true);
-}
-
-/**
  * Build an numbered list from an array.
  * @param {string[]} array 
  */
 function buildList(array) {
-	return Formatters.codeBlock(array.map((value, index) => {
+	return codeBlock(array.map((value, index) => {
 		return `[${index}] ${value}`
 	}).join("\n"));
-}
-
-/**
- * Convert from an stringified array.
- * @param {string} stringified
- */
-function fromArray(stringified) {
-	if (stringified === "") return [];
-	return stringified.split(",");
-}
-
-/**
- * Convert to an stringified array.
- * @param {string[]} array
- */
-function toArray(array) {
-	return array.join();
 }
 
 db.sync().then(() => {
