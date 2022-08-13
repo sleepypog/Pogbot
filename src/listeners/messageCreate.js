@@ -1,5 +1,6 @@
 import { canManageGuild } from '../utils/permissionUtils.js';
 import { fromArray } from '../utils/arrayUtils.js';
+import { parseDuration } from '../utils/timeUtils.js';
 
 /**
  * @param {import("../bot.js").default} client
