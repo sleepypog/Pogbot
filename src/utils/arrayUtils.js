@@ -4,8 +4,7 @@
  * @returns {any[]}
  */
 export function fromArray(stringified) {
-	if (stringified === "") return [];
-	return stringified.split(",");
+	return (stringified === '' ? [] : stringified.split(','));
 }
 
 /**
