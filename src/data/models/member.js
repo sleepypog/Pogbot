@@ -1,8 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 
-export default class Member extends Model {}
-
-Member.init('member', {
+export default {
 	guild_id: {
 		type: DataTypes.STRING,
 	},
@@ -12,6 +10,4 @@ Member.init('member', {
 	score: {
 		type: DataTypes.INTEGER
 	}
-}, {
-	timestamps: false
-});
+};

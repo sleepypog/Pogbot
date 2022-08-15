@@ -1,9 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 
-export default class Guild extends Model {
-}
-
-Guild.init('guilds', {
+export default {
 	guild_id: {
 		type: DataTypes.STRING,
 		primaryKey: true,
@@ -17,6 +14,4 @@ Guild.init('guilds', {
 	master: {
 		type: DataTypes.STRING
 	}
-}, {
-	timestamps: false
-});
+};
