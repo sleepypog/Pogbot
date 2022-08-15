@@ -1,13 +1,13 @@
 import { canManageGuild } from '../utils/permissionUtils.js';
 import { fromArray } from '../utils/arrayUtils.js';
-import { parseDuration } from '../utils/timeUtils.js';
+import { parseDuration } from '../utils/stringUtils.js';
 
 /**
  * @param {import("../bot.js").default} client
  * @param {import("discord.js").Message} message
  */
 export default async function (client, message) {
-	if (message.inGuild()) {
+	if (message.inGuild) {
 		const guild = await client.database.getGuild(message.guildId);
 
 		const triggers = fromArray(guild.getDataValue('triggers'));
