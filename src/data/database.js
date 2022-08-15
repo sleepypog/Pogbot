@@ -26,8 +26,13 @@ export default class Database {
 			}
 		});
 
-		this.guilds = Guild;
-		this.members = Member;
+		this.guilds = this.sequelize.define('guild', Guild, {
+			timestamps: false
+		});
+		
+		this.members = this.sequelize.define('member', Member, {
+			timestamps: false
+		});
 
 		this.initializeAssociations();
 
