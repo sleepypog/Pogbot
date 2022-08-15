@@ -1,16 +1,12 @@
 import { ApplicationCommandData, CommandInteraction } from "discord.js";
+import Bot from "../bot";
 
 declare type Command = {
     /**
      * Is this command limited to guilds only?
      */
     guildOnly: boolean;
-
-    /**
-     * Is this command limited to bot developers?
-     */
-    devOnly?: boolean;
-
+    
     /**
      * Does this command require ADMINISTRATOR or MANAGE GUILD permissions?
      */
@@ -25,5 +21,5 @@ declare type Command = {
     /**
      * Execute the interaction.
      */
-    execute: (interaction: CommandInteraction) => Promise<void>;
+    execute: (client: Bot,  interaction: CommandInteraction) => Promise<void>;
 }
