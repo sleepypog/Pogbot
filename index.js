@@ -346,6 +346,8 @@ client.on("messageCreate", async (message) => {
 
 					await message.react("🎉");
 					await message.reply("Congrats <@" + message.author.id + ">, you got 1 point from pogging! It took you " + parseDuration(Date.now() - awakeListeners.get(message.guildId).awakedAt) + " to do so!")
+				
+					awakeListeners.delete(message.guildId);
 				}
 			}
 		}
