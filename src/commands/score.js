@@ -5,7 +5,7 @@ import { ApplicationCommandOptionType } from 'discord.js';
  */
 export default {
 	guildOnly: true,
-	requireAdmin: true,
+	requireAdmin: false,
 	data: {
 		name: 'score',
 		description: 'Get the amount of points you (or someone else has).',
