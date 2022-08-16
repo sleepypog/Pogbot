@@ -111,7 +111,7 @@ export default class Database {
 			},
 			order: [
 				[
-					'id', 'ASC'
+					'score', 'DESC'
 				]
 			],
 			limit: count ?? 5
