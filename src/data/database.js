@@ -48,6 +48,10 @@ export default class Database {
 		this.guilds.hasMany(this.members, {
 			foreignKey: 'guild_id'
 		});
+
+		this.members.belongsTo(this.guilds, {
+			foreignKey: 'guild_id'
+		});
 	}
 
 	/**
@@ -55,7 +59,7 @@ export default class Database {
  	* @param {string} id
  	*/
 	async getGuild(id) {
-		const [guild, created] = await this.guilds.findOrCreate({
+		const [guild] = await this.guilds.findOrCreate({
 			where: {
 				guild_id: id
 			},
@@ -67,10 +71,6 @@ export default class Database {
 			}
 		});
 
-		if (created) {
-			console.debug(`Created guild ${id}`);
-		}
-
 		return guild;
 	}
 	
@@ -80,7 +80,9 @@ export default class Database {
 	 * @param {string} user
 	 */
 	async getMember(guild, user) {
-		const [member, created] = await this.members.findOrCreate({
+		const associated = await this.getGuild(guild);
+
+		const [member] = await this.members.findOrCreate({
 			where: {
 				guild_id: guild,
 				member_id: user
@@ -92,9 +94,7 @@ export default class Database {
 			}
 		});
 
-		if (created) {
-			console.debug(`Created member ${user} in guild ${guild}`);
-		}
+		associated.addMember(member);
 
 		return member;
 	}
