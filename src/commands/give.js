@@ -32,8 +32,7 @@ export default {
 		await member.reload();
 
 		await interaction.reply({
-			content: 'Gave ' + amount + ' points to <@' + id + '>',
-			ephemeral: true
+			content: 'Gave ' + amount + ' points to <@' + id + '>',		
 		});
 	}
 };

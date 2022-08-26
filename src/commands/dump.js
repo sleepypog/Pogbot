@@ -54,21 +54,21 @@ export default {
 			}
 			case 'triggers': {
 				await interaction.reply({ 
-					content: codeBlock(buildList(fromArray(guild.getDataValue('triggers')))), 
+					content: codeBlock(buildList(fromArray(guild.get('triggers')))), 
 					ephemeral: true
 				});
 				break;
 			}
 			case 'channels': {
 				await interaction.reply({ 
-					content: codeBlock(buildList(fromArray(guild.getDataValue('channels')))), 
+					content: codeBlock(buildList(fromArray(guild.get('channels')))), 
 					ephemeral: true
 				});
 				break;
 			}
 			case 'master': {
 				await interaction.reply({ 
-					content: inlineCode(guild.getDataValue('master')), 
+					content: inlineCode(guild.get('master')), 
 					ephemeral: true
 				});
 				break;

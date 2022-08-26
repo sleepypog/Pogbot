@@ -10,10 +10,12 @@ export default class Database {
 	 */
 	sequelize;
 
+	logger;
+
 	guilds;
 	members;
 
-	constructor() {
+	constructor(logger) {
 		// eslint-disable-next-line no-undef
 		this.sequelize = new Sequelize(process.env.DATABASE_URL, {
 			logging: false,
@@ -26,6 +28,8 @@ export default class Database {
 			}
 		});
 
+		this.logger = logger;
+
 		this.guilds = this.sequelize.define('guild', Guild, {
 			timestamps: false
 		});
@@ -37,7 +41,7 @@ export default class Database {
 		this.initializeAssociations();
 
 		this.sequelize.sync().then(() => {
-			console.debug('Synced database!');
+			this.logger.debug('Synced database!');
 		});
 	}
 

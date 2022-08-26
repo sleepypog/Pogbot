@@ -19,7 +19,7 @@ export default {
 	},
 	execute: async (client, interaction) => {
 		const who = interaction.options.getUser('user') ?? interaction.user;
-		const score = (await client.database.getMember(interaction.guildId, who.id)).getDataValue('score');
+		const score = (await client.database.getMember(interaction.guildId, who.id)).get('score');
 		await interaction.reply({
 			content: (who.id === interaction.user.id ? 'You have ' : '<@' + who.id + '> has ') + score + ' points in this guild.',
 			ephemeral: true

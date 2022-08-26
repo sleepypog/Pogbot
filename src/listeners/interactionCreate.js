@@ -18,6 +18,6 @@ export default async function (client, [ interaction ]) {
 
 		command.execute(client, interaction);
 	} else {
-		console.error('Command %s does not have an handler!', commandName);
+		client.logger.error('Command %s does not have an handler!', commandName);
 	}
 }

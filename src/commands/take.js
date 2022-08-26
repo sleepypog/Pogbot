@@ -33,7 +33,6 @@ export default {
 
 		await interaction.reply({
 			content: 'Took ' + amount + ' points from <@' + id + '>',
-			ephemeral: true
 		});
 	}
 };

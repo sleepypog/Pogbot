@@ -2,6 +2,7 @@ import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import Database from './data/database.js';
 import { readdir } from 'fs/promises';
 import { buildData } from './utils/commandUtils.js';
+import { createLogger, format, transports} from 'winston';
 
 export default class Bot extends Client {
 
@@ -9,6 +10,8 @@ export default class Bot extends Client {
 
 	commands;
 	pogListeners;
+
+	logger;
 
 	constructor() {
 		super({
@@ -19,7 +22,19 @@ export default class Bot extends Client {
 			]
 		});
 
-		this.database = new Database();
+		this.logger = createLogger({
+			format: format.combine(
+				format.colorize(),
+				format.simple()
+			),
+			transports: [ 
+				new transports.Console({
+					level: 'silly'
+				}) 
+			]
+		});
+
+		this.database = new Database(this.logger);
 
 		this.commands = new Collection();
 		this.pogListeners = new Collection();
@@ -36,13 +51,14 @@ export default class Bot extends Client {
 	 * @private
 	 */
 	registerCommands() {
+		this.logger.silly('Registering commands');
 		readdir('./src/commands').then((commands) => {
 			for (const command of commands) {
 				if (command.endsWith('.js')) {
 					import('./commands/' + command).then(({ default: module }) => {
 						this.commands.set(command.replace('.js', ''), module);
 						this.application.commands.create(buildData(module).data);
-						console.debug('Registered command %s', command);
+						this.logger.debug('Registered command ' + module.data.name);
 					});
 				}
 			}
@@ -53,6 +69,7 @@ export default class Bot extends Client {
 	 * @private
 	 */
 	registerEventListeners() {
+		this.logger.silly('Registering event listeners');
 		readdir('./src/listeners').then((listeners) => {
 			for (const listener of listeners) {
 				if (listener.endsWith('.js')) {
@@ -60,7 +77,7 @@ export default class Bot extends Client {
 						this.on(listener.replace('.js', ''), (...args) => {
 							return module(this, args);
 						});
-						console.debug('Registered listener %s', listener);
+						this.logger.debug('Registered listener ' + listener);
 					});
 				}
 			}

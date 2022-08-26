@@ -10,7 +10,7 @@ export default async function (client, message) {
 	if (message.inGuild) {
 		const guild = await client.database.getGuild(message.guildId);
 
-		const triggers = fromArray(guild.getDataValue('triggers'));
+		const triggers = fromArray(guild.get('triggers'));
 
 		if (!message.author.bot) {
 			if (!client.pogListeners.has(message.guildId)) {
@@ -24,11 +24,11 @@ export default async function (client, message) {
 				}
 			} else {
 				const guild = await client.database.getGuild(message.guildId);
-				const channels = fromArray(guild.getDataValue('channels'));
+				const channels = fromArray(guild.get('channels'));
 
 				if (channels.some((channel) => {return channel === message.channelId;})) {
 					if (message.content.toLowerCase().includes('pog')) {
-						console.debug('Pog in guild ' + message.guildId);
+						client.logger.debug('Pog in guild ' + message.guild.name);
 
 						const member = await client.database.getMember(message.guildId, message.author.id);
 						(await member.increment('score')).reload();
