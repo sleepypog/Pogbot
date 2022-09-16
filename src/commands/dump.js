@@ -3,7 +3,7 @@ import { fromArray } from '../utils/arrayUtils.js';
 import { buildList } from '../utils/stringUtils.js';
 
 /**
- * @type {import(".").Command}
+ * @type {import("../types").Command}
  */
 export default {
 	guildOnly: true,

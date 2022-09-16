@@ -11,9 +11,16 @@ export function parseDuration(milliseconds) {
 /**
  * Build an numbered list from an array.
  * @param {string[]} array 
+ * @param {boolean?} numbered
  */
-export function buildList(array) {
-	return array.map((value, index) => {
-		return `[${index}] ${value}`;
-	}).join('\n');
+export function buildList(array, numbered = true) {
+	if (numbered) {
+		return array.map((value, index) => {
+			return `[${index}] ${value}`;
+		}).join('\n');
+	} else {
+		return array.map((value) => {
+			return `${value}`;
+		}).join('\n');
+	}
 }

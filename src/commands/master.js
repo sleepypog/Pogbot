@@ -1,5 +1,5 @@
 /**
- * @type {import(".").Command}
+ * @type {import("../types").Command}
  */
 export default {
 	guildOnly: true,

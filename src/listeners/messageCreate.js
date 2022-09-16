@@ -1,4 +1,4 @@
-import { canManageGuild } from '../utils/permissionUtils.js';
+import { canManageGuild } from '../utils/commandUtils.js';
 import { fromArray } from '../utils/arrayUtils.js';
 import { parseDuration } from '../utils/stringUtils.js';
 

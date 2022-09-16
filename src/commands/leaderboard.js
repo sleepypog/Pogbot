@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 
 /**
- * @type {import('.').Command}
+ * @type {import('../types').Command}
  */
 export default {
 	guildOnly: true,
@@ -29,7 +29,7 @@ export default {
 		const embed = new EmbedBuilder();
 
 		embed.setTitle('Leaderboard for ' + interaction.guild.name);
-		embed.setColor('Greyple');
+		embed.setColor('Blueple');
 
 		const scores = [];
 		members.forEach((member) => {
