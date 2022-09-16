@@ -8,7 +8,14 @@ export default class Bot extends Client {
 
 	database;
 
+	/**
+	 * @type {Collection<string, import('./types/index.js').Command>}
+	 */
 	commands;
+
+	/**
+	 * @type {Collection<string, import('./types/index.js').Listener}
+	 */
 	pogListeners;
 
 	logger;
@@ -29,7 +36,7 @@ export default class Bot extends Client {
 			),
 			transports: [ 
 				new transports.Console({
-					level: 'silly'
+					level: 'debug'
 				}) 
 			]
 		});
@@ -44,6 +51,8 @@ export default class Bot extends Client {
 		// eslint-disable-next-line no-undef
 		this.login(process.env.TOKEN).then(() => {
 			this.registerCommands();
+		}).catch((error) => {
+			this.logger.error('Could not login to Discord: ' + error);
 		});
 	}
 
@@ -57,8 +66,11 @@ export default class Bot extends Client {
 				if (command.endsWith('.js')) {
 					import('./commands/' + command).then(({ default: module }) => {
 						this.commands.set(command.replace('.js', ''), module);
-						this.application.commands.create(buildData(module).data);
-						this.logger.debug('Registered command ' + module.data.name);
+						this.logger.silly('Registering command ' + module.data.name);
+						this.application.commands.create(buildData(module).data).then((data) => {
+							module._commandId = data.id;
+							this.logger.debug('Registered command ' + module.data.name + ', version ' + data.version);
+						});
 					});
 				}
 			}
