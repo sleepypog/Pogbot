@@ -1,4 +1,4 @@
-import { PermissionsBitField } from 'discord.js';
+import { Permissions } from 'discord.js';
 
 /**
  * Handle permissions and restrictions.
@@ -7,13 +7,13 @@ import { PermissionsBitField } from 'discord.js';
 export function buildData(command) {
 	command.data.dmPermission = !command.guildOnly ?? true;
 
-	const defaultPermissions = new PermissionsBitField('UseApplicationCommands');
+	const defaultPermissions = [ Permissions.FLAGS.USE_APPLICATION_COMMANDS ];
 
 	if (command.requireAdmin) {
 		if (!command.guildOnly) {
 			throw new Error('Command cannot require admin if not limited to guilds!');
 		}
-		defaultPermissions.add('Administrator', 'ManageGuild');
+		defaultPermissions.push(Permissions.FLAGS.ADMINISTRATOR, Permissions.FLAGS.MANAGE_GUILD);
 	} 
 
 	return command;
@@ -35,5 +35,5 @@ export function mentionCommand(bot, name) {
  * @returns {boolean}
  */
 export function canManageGuild(member) {
-	return member.permissions.has(PermissionsBitField.Flags.ManageGuild, true);
+	return member.permissions.has(Permissions.FLAGS.MANAGE_GUILD, true);
 }

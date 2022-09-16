@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, codeBlock, inlineCode } from 'discord.js';
+import { Formatters } from 'discord.js';
 import { fromArray } from '../utils/arrayUtils.js';
 import { buildList } from '../utils/stringUtils.js';
 
@@ -15,27 +15,27 @@ export default {
 			{
 				name: 'guild',
 				description: 'Multiple guild data.',
-				type: ApplicationCommandOptionType.SubcommandGroup,
+				type: 'SUB_COMMAND_GROUP',
 				options: [
 					{
 						name: 'full',
 						description: 'Dump all guild data as JSON.',
-						type: ApplicationCommandOptionType.Subcommand
+						type: 'SUB_COMMAND'
 					},
 					{
 						name: 'triggers',
 						description: 'Dump all triggers as an list.',
-						type: ApplicationCommandOptionType.Subcommand
+						type: 'SUB_COMMAND'
 					},
 					{
 						name: 'channels',
 						description: 'Dump all channels as an list.',
-						type: ApplicationCommandOptionType.Subcommand
+						type: 'SUB_COMMAND'
 					},
 					{
 						name: 'master',
 						description: 'Dump the ID for the current master.',
-						type: ApplicationCommandOptionType.Subcommand
+						type: 'SUB_COMMAND'
 					}
 				]
 			},
@@ -47,28 +47,28 @@ export default {
 			switch (interaction.options.getSubcommand(true)) {
 			case 'full': {
 				await interaction.reply({ 
-					content: codeBlock('json', JSON.stringify(guild.toJSON(), null, '\t')), 
+					content: Formatters.codeBlock('json', JSON.stringify(guild.toJSON(), null, '\t')), 
 					ephemeral: true
 				});
 				break;
 			}
 			case 'triggers': {
 				await interaction.reply({ 
-					content: codeBlock(buildList(fromArray(guild.get('triggers')))), 
+					content: Formatters.codeBlock(buildList(fromArray(guild.get('triggers')))), 
 					ephemeral: true
 				});
 				break;
 			}
 			case 'channels': {
 				await interaction.reply({ 
-					content: codeBlock(buildList(fromArray(guild.get('channels')))), 
+					content: Formatters.codeBlock(buildList(fromArray(guild.get('channels')))), 
 					ephemeral: true
 				});
 				break;
 			}
 			case 'master': {
 				await interaction.reply({ 
-					content: inlineCode(guild.get('master')), 
+					content: Formatters.inlineCode(guild.get('master')), 
 					ephemeral: true
 				});
 				break;

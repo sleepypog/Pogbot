@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 /**
  * @type {import('../types').Command}
@@ -13,7 +13,7 @@ export default {
 			{
 				name: 'amount',
 				description: 'How many places to fetch.',
-				type: ApplicationCommandOptionType.Integer,
+				type: 'INTEGER',
 				minValue: 3,
 				maxValue: 10
 			}
@@ -26,7 +26,7 @@ export default {
 			return await interaction.reply('😮 This is awkward, ' + interaction.guild.name + ' does not have any saved scores at all! Try using `/score` first.');
 		}
 
-		const embed = new EmbedBuilder();
+		const embed = new MessageEmbed();
 
 		embed.setTitle('Leaderboard for ' + interaction.guild.name);
 		embed.setColor('Blueple');

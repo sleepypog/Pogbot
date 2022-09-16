@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/GNosii/SimplePogbot#readme",
   "dependencies": {
-    "discord.js": "^14.1.2",
+    "discord.js": "^13.11.0",
     "dotenv": "^16.0.1",
     "ms": "^2.1.3",
     "pg": "^8.7.3",

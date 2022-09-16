@@ -1,4 +1,4 @@
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, Intents } from 'discord.js';
 import Database from './data/database.js';
 import { readdir } from 'fs/promises';
 import { buildData } from './utils/commandUtils.js';
@@ -23,10 +23,18 @@ export default class Bot extends Client {
 	constructor() {
 		super({
 			intents: [
-				GatewayIntentBits.Guilds,
-				GatewayIntentBits.GuildMessages,
-				GatewayIntentBits.MessageContent
-			]
+				Intents.FLAGS.GUILDS,
+				Intents.FLAGS.GUILD_MESSAGES,
+				Intents.FLAGS.MESSAGE_CONTENT
+			],
+			presence: {
+				activities: [
+					{
+						name: 'Pog-a-thon',
+						type: 'COMPETING'
+					}
+				]
+			}
 		});
 
 		this.logger = createLogger({
@@ -69,7 +77,7 @@ export default class Bot extends Client {
 						this.logger.silly('Registering command ' + module.data.name);
 						this.application.commands.create(buildData(module).data).then((data) => {
 							module._commandId = data.id;
-							this.logger.debug('Registered command ' + module.data.name + ', version ' + data.version);
+							this.logger.silly('Registered command ' + module.data.name + ', version ' + data.version);
 						});
 					});
 				}
@@ -89,7 +97,7 @@ export default class Bot extends Client {
 						this.on(listener.replace('.js', ''), (...args) => {
 							return module(this, args);
 						});
-						this.logger.debug('Registered listener ' + listener);
+						this.logger.silly('Registered listener ' + listener);
 					});
 				}
 			}

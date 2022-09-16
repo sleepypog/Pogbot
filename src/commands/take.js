@@ -1,5 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord.js';
-
 /**
  * @type {import("../types").Command}
  */
@@ -14,12 +12,12 @@ export default {
 				name: 'user',
 				description: 'The user you want to take points from.',
 				required: true,
-				type: ApplicationCommandOptionType.User,
+				type: 'USER',
 			},
 			{
 				name: 'points',
 				description: 'How many points to take. Defaults to one.',
-				type: ApplicationCommandOptionType.Integer,
+				type: 'INTEGER',
 			},
 		]
 	},

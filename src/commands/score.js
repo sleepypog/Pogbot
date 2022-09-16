@@ -1,5 +1,3 @@
-import { ApplicationCommandOptionType } from 'discord.js';
-
 /**
  * @type {import("../types").Command}
  */
@@ -13,7 +11,7 @@ export default {
 			{
 				name: 'user',
 				description: 'The user to fetch score for. Defaults to you.',
-				type: ApplicationCommandOptionType.User,
+				type: 'USER',
 			},
 		]
 	},
