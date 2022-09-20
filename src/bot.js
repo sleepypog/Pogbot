@@ -2,7 +2,11 @@ import { Client, Collection, Intents } from 'discord.js';
 import Database from './data/database.js';
 import { readdir } from 'fs/promises';
 import { buildData } from './utils/commandUtils.js';
-import { createLogger, format, transports} from 'winston';
+import { createLogger, format, transports } from 'winston';
+
+import readyListener from './listeners/ready.js';
+import interactionListener from './listeners/interactionCreate.js';
+import messageListener from './listeners/messageCreate.js';
 
 export default class Bot extends Client {
 
@@ -42,10 +46,10 @@ export default class Bot extends Client {
 				format.colorize(),
 				format.simple()
 			),
-			transports: [ 
+			transports: [
 				new transports.Console({
 					level: 'debug'
-				}) 
+				})
 			]
 		});
 
@@ -62,6 +66,7 @@ export default class Bot extends Client {
 		}).catch((error) => {
 			this.logger.error('Could not login to Discord: ' + error);
 		});
+
 	}
 
 	/**
@@ -85,10 +90,8 @@ export default class Bot extends Client {
 		});
 	}
 
-	/**
-	 * @private
-	 */
-	registerEventListeners() {
+	/*
+	async registerEventListeners() {
 		this.logger.silly('Registering event listeners');
 		readdir('./src/listeners').then((listeners) => {
 			for (const listener of listeners) {
@@ -101,6 +104,22 @@ export default class Bot extends Client {
 					});
 				}
 			}
+		});
+	}
+	*/
+
+	/**
+	 * Temporal workaround while I figure out what is going on with the other method.
+	 * @private
+	 */
+	registerEventListeners() {
+		this.once('ready', readyListener);
+		this.on('messageCreate', (message) => {
+			return messageListener(this, message);
+		});
+		this.on('interactionCreate', (interaction) => { 
+			// array for compatibility with the existing method.
+			return interactionListener(this, [ interaction ]);
 		});
 	}
 }
