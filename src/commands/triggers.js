@@ -67,7 +67,7 @@ export default {
 				} else {
 					array.push(trigger);
 					(await guild.update({ triggers: toArray(array) })).reload();
-					await interaction.reply('🔔 Added trigger `' + trigger + '` at index ' + (array.length - 1));
+					await interaction.reply('🔔 Added trigger `' + trigger + '` at index ' + array.length);
 				}
 			}
 			break;
@@ -80,7 +80,7 @@ export default {
 				await interaction.reply('🙁 That index does not exist! Did you mean to ' + mentionCommand(client, 'triggers add') + ' one?');
 			} else {
 				const string = array[trigger - 1];
-				delete array[trigger - 1];
+				array.splice(trigger - 1, 1);
 				(await guild.update({ triggers: toArray(array) })).reload();
 				await interaction.reply('🙁 Removed trigger at index ' + trigger + ' with content `' + string + '`');
 			}
