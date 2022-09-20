@@ -16,7 +16,7 @@ export function parseDuration(milliseconds) {
 export function buildList(array, numbered = true) {
 	if (numbered) {
 		return array.map((value, index) => {
-			return `[${index}] ${value}`;
+			return `[${index + 1}] ${value}`;
 		}).join('\n');
 	} else {
 		return array.map((value) => {
