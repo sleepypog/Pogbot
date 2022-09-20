@@ -8,12 +8,10 @@ import { parseDuration } from '../utils/stringUtils.js';
  */
 export default async function (client, message) {
 	if (message.inGuild) {
-		client.logger.debug('gets here 2');
 		const guild = await client.database.getGuild(message.guildId);
 
 		const triggers = fromArray(guild.get('triggers'));
-
-		client.logger.debug('gets here 3');
+		
 		if (!message.author.bot) {
 			if (!client.pogListeners.has(message.guildId)) {
 				if (canManageGuild(message.member)) {
@@ -43,5 +41,4 @@ export default async function (client, message) {
 			}
 		}
 	}
-	client.logger.debug('final gets here!');
 }
