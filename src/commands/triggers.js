@@ -76,11 +76,13 @@ export default {
 			const trigger = interaction.options.getInteger('trigger', true);
 			const array = fromArray(triggers);
 
-			if (array.length <= trigger + 1) {
+			if (array.length <= trigger) {
 				await interaction.reply('🙁 That index does not exist! Did you mean to ' + mentionCommand(client, 'triggers add') + ' one?');
 			} else {
+				const string = array[trigger - 1];
 				delete array[trigger - 1];
-				await interaction.reply('🙁 Removed trigger at index ' + ( trigger - 1));
+				(await guild.update({ triggers: toArray(array) })).reload();
+				await interaction.reply('🙁 Removed trigger at index ' + trigger + ' with content `' + string + '`');
 			}
 			break;
 		}
@@ -94,7 +96,7 @@ export default {
 				embed.setTitle('Registered triggers (' + array.length + ')');
 				embed.setColor('Blurple');
 
-				embed.setDescription(buildList(array, false));
+				embed.setDescription(buildList(array, true));
 
 				await interaction.reply({ embeds: [embed] });
 			}
