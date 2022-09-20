@@ -56,8 +56,13 @@ export default {
 
 		switch (subcommand) {
 		case 'add': {
-			const { id } = interaction.options.getChannel('channel', true);
+			const { id, type } = interaction.options.getChannel('channel', true);
 			const array = fromArray(channels);
+
+			if (type !== 'GUILD_TEXT') {
+				await interaction.reply('😡 That is not a text channel!');
+				return;
+			}
 
 			if (array.includes(id)) {
 				await interaction.reply('🙁 I\'m already listening to that channel!');
