@@ -8,16 +8,12 @@ import { writeFile } from 'fs/promises';
  * @property {string} [prop2]
  */
 const object = {
+	version: process.env.npm_package_version,
 	commit: getCommit(),
-	branch: getBranch()
 };
 
 function getCommit() {
 	return execSync('git rev-parse --short HEAD').toString().trim();
-}
-
-function getBranch() {
-	return execSync('git symbolic-ref --short HEAD').toString().trim();
 }
 
 writeFile('./builddata.json', JSON.stringify(object), { encoding: 'utf-8' }).then(() => {

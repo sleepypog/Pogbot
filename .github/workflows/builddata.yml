@@ -1,12 +1,16 @@
-name: "Pogbot: Generate BuildData"
+name: 'Pogbot: Generate BuildData'
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    paths-ignore:
+      - 'builddata.json'
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: "Git: Checkout"
+      - name: 'Git: Checkout'
         uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
@@ -14,10 +18,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 14.x
-      - name: "Node: Run script"
+      - name: 'Node: Generate build data'
         id: script
         run: node ./scripts/generateBuildData.mjs
       - name: 'Git: Send them back'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 🤖 Generate builddata.json
+          commit_user_name: Builder John 👷‍♂️
+          commit_message: 'ci: generate builddata.json'
