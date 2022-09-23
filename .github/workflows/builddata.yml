@@ -20,7 +20,7 @@ jobs:
           node-version: 14.x
       - name: 'Node: Generate build data'
         id: script
-        run: node ./scripts/generateBuildData.mjs
+        run: npm run prestart
       - name: 'Git: Send them back'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
