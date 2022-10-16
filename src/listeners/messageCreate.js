@@ -38,8 +38,22 @@ export default async function (client, message) {
 						(await member.increment('score')).reload();
 						(await (await client.database.getGuild(message.guildId)).update({ master: message.author.id }));
 
-						await message.react('🎉');
-						await message.reply('Congrats <@' + message.author.id + '>, you got 1 point from pogging! It took you ' + parseDuration(Date.now() - awakedAt) + ' to do so!');
+						try {
+							await message.react('🎉');
+							await message.reply('Congrats <@' + message.author.id + '>, you got 1 point from pogging! It took you ' + parseDuration(Date.now() - awakedAt) + ' to do so!');
+						} catch (error) {
+							if (error.name === 'DiscordAPIError') {
+								// MissingPermissions
+								if (error.code === 50013) {
+									const dm = await (await message.guild.fetchOwner()).createDM();
+									await dm.send('Hello! I can\'t send messages in <#' + message.channelId + '>. Points were silently awarded.');
+									return;
+								}
+								
+							}
+							console.error('Could not react/send message to Pog channel, continuing: ' + error);
+							
+						}
 					}
 				}
 
