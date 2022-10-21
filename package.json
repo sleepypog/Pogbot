@@ -1,6 +1,6 @@
 {
   "name": "simplepogbot",
-  "version": "1.1.2",
+  "version": "1.2",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "ms": "^2.1.3",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
+    "prom-client": "^14.1.0",
     "sequelize": "^6.21.3",
     "sqlite3": "^5.0.11",
     "winston": "^3.8.1"

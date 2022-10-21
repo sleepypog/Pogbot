@@ -24,6 +24,11 @@ export default class Bot extends Client {
 
 	logger;
 
+	/**
+	 * @type {import('./types/index.js').Metrics?}
+	 */
+	metrics; 
+
 	constructor() {
 		super({
 			intents: [
@@ -121,5 +126,23 @@ export default class Bot extends Client {
 			// array for compatibility with the existing method.
 			return interactionListener(this, [ interaction ]);
 		});
+	}
+
+	/**
+	 * Bind this client to an metrics service.
+	 * @param {import('./types/index.js').Metrics} metrics
+	 */
+	bindMetrics(metrics) {
+		this.metrics = metrics;
+	}
+
+	/**
+	 * Send an MetricEvent, dropping it if there's no Metrics class active.
+	 * @param {import('./types/index.js').MetricEvent} event 
+	 */
+	sendMetricEvent(event) {
+		if (this.metrics !== null) {
+			this.metrics.onMetricEvent(event);
+		}
 	}
 }
