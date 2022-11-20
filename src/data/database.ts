@@ -1,23 +1,22 @@
 import { Sequelize } from 'sequelize';
+import { Logger } from 'winston';
 
-import Guild from './models/guild.js';
-import Member from './models/member.js';
+import Guild from './models/Guild.js';
+import Member from './models/Member.js';
 
 export default class Database {
 	/**
 	 * Please use the methods in the Database class or individual models instead.
-	 * @private
 	 */
-	sequelize;
+	private sequelize: Sequelize;
 
-	logger;
+	private logger: Logger;
 
-	guilds;
-	members;
+	private guilds;
+	private members;
 
-	constructor(logger) {
-		// eslint-disable-next-line no-undef
-		this.sequelize = new Sequelize(process.env.DATABASE_URL, {
+	constructor(logger: Logger) {
+		this.sequelize = new Sequelize(process.env.DATABASE_URL as string, {
 			logging: false,
 			dialect: 'postgres',
 			dialectOptions: {

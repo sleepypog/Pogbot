@@ -8,6 +8,7 @@ import { writeFile } from 'fs/promises';
  * @property {string} [prop2]
  */
 const object = {
+	// eslint-disable-next-line no-undef
 	version: process.env.npm_package_version,
 	commit: getCommit(),
 };

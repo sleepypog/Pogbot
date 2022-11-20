@@ -7,6 +7,7 @@ import { createLogger, format, transports } from 'winston';
 import readyListener from './listeners/ready.js';
 import interactionListener from './listeners/interactionCreate.js';
 import messageListener from './listeners/messageCreate.js';
+import PrometheusMetrics from './metrics/index.js';
 
 export default class Bot extends Client {
 
@@ -46,6 +47,8 @@ export default class Bot extends Client {
 			}
 		});
 
+		const startup = performance.now();
+
 		this.logger = createLogger({
 			format: format.combine(
 				format.colorize(),
@@ -58,6 +61,8 @@ export default class Bot extends Client {
 			]
 		});
 
+		this.metrics = new PrometheusMetrics();
+
 		this.database = new Database(this.logger);
 
 		this.commands = new Collection();
@@ -68,10 +73,13 @@ export default class Bot extends Client {
 		// eslint-disable-next-line no-undef
 		this.login(process.env.TOKEN).then(() => {
 			this.registerCommands();
+			this.sendMetricEvent({
+				type: 'STARTUP',
+				count: (performance.now() - startup / 1000)
+			});
 		}).catch((error) => {
 			this.logger.error('Could not login to Discord: ' + error);
 		});
-
 	}
 
 	/**
@@ -126,14 +134,6 @@ export default class Bot extends Client {
 			// array for compatibility with the existing method.
 			return interactionListener(this, [ interaction ]);
 		});
-	}
-
-	/**
-	 * Bind this client to an metrics service.
-	 * @param {import('./types/index.js').Metrics} metrics
-	 */
-	bindMetrics(metrics) {
-		this.metrics = metrics;
 	}
 
 	/**

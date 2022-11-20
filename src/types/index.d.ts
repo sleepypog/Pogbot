@@ -38,31 +38,3 @@ declare type Command = {
 }
 
 declare type Listener = (client: Bot, ...args: any) => void;
-
-declare type Metrics = {
-    onMetricEvent: (event: MetricEvent) => void;
-};
-
-enum MetricEventType {
-    GUILD_JOIN,
-    GUILD_LEAVE,
-    POG_PROCESSED,
-    ERROR
-};
-
-type GuildMetricEvent = {
-    type: MetricEventType.GUILD_JOIN | MetricEventType.GUILD_LEAVE
-}
-
-type PogMetricEvent = {
-    type: MetricEventType.POG_PROCESSED
-}
-
-type ErrorMetricEvent = {
-    type: MetricEventType.ERROR
-}
-
-declare type MetricEvent = 
-    | GuildMetricEvent
-    | PogMetricEvent
-    | ErrorMetricEvent;
