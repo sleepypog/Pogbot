@@ -4,8 +4,21 @@ import ms from 'ms';
  * Milliseconds to human-friendly format.
  * @param {number} milliseconds
  */
-export function parseDuration(milliseconds) {
+export function toDuration(milliseconds) {
 	return ms(milliseconds);
+}
+
+/**
+ * Number to human-friendly place emoji.
+ * @param {number} number 
+ */
+export function asPlaceEmoji(number) {
+	switch (number) {
+	case 1: return ':first_place:';
+	case 2: return ':second_place:';
+	case 3: return ':third_place:';
+	default: return '';
+	}
 }
 
 /**

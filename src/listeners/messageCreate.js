@@ -1,6 +1,6 @@
 import { canManageGuild } from '../utils/commandUtils.js';
 import { fromArray } from '../utils/arrayUtils.js';
-import { parseDuration } from '../utils/stringUtils.js';
+import {                             toDuration } from '../utils/stringUtils.js';
 
 /**
  * @param {import("../bot.js").default} client
@@ -40,7 +40,7 @@ export default async function (client, message) {
 
 						try {
 							await message.react('🎉');
-							await message.reply('Congrats <@' + message.author.id + '>, you got 1 point from pogging! It took you ' + parseDuration(Date.now() - awakedAt) + ' to do so!');
+							await message.reply('Congrats <@' + message.author.id + '>, you got 1 point from pogging! It took you ' + toDuration(Date.now() - awakedAt) + ' to do so!');
 						} catch (error) {
 							if (error.name === 'DiscordAPIError') {
 								// MissingPermissions
