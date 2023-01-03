@@ -1,8 +1,8 @@
-import { MessageEmbed } from 'discord.js';
 import { asPlaceEmoji } from '../utils/stringUtils.js';
+import { MessageEmbed } from 'discord.js';
 
 /**
- * @type {import('../types').Command}
+ * @type {import('../types/index.d.ts').Command}
  */
 export default {
 	guildOnly: true,
@@ -28,14 +28,9 @@ export default {
 			return await interaction.reply('😮 This is awkward, ' + interaction.guild.name + ' does not have any saved scores at all! Try using `/score` first.');
 		}
 
-		const embed = new MessageEmbed();
-
-		embed.setTitle('Leaderboard for ' + interaction.guild.name);
-		embed.setColor('BLURPLE');
-
 		const scores = [];
 		members.forEach((member, place) => {
-			var string = [];
+			const string = [];
 			if (member.get('score') !== 0) {
 				if (guild.get('master') === member.get('member_id')) {
 					string.push('👑 ');
@@ -48,11 +43,15 @@ export default {
 			scores.push(string.join(''));
 		});
 
-		embed.setThumbnail(interaction.guild.iconURL());
-		embed.setDescription(scores.join('\n'));
+		const embed = new MessageEmbed({
+			title: `Leaderboard for ${interaction.guild.name}`,
+			color: 'BLURPLE',
+			thumbnail: interaction.guild.iconURL(),
+			description: scores.join('\n')
+		});
 
 		await interaction.reply({
-			embeds: [ embed ]
+			embeds: [embed]
 		});
 	}
 };

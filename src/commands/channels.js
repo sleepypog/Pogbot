@@ -4,7 +4,7 @@ import { mentionCommand } from '../utils/commandUtils.js';
 import { buildList } from '../utils/stringUtils.js';
 
 /**
- * @type {import("../types").Command}
+ * @type {import("../types/index.d.ts").Command}
  */
 export default {
 	guildOnly: true,
@@ -55,53 +55,53 @@ export default {
 		const channels = guild.get('channels');
 
 		switch (subcommand) {
-		case 'add': {
-			const { id, type } = interaction.options.getChannel('channel', true);
-			const array = fromArray(channels);
+			case 'add': {
+				const { id, type } = interaction.options.getChannel('channel', true);
+				const array = fromArray(channels);
 
-			if (type !== 'GUILD_TEXT') {
-				await interaction.reply('😡 That is not a text channel!');
-				return;
+				if (type !== 'GUILD_TEXT') {
+					await interaction.reply('😡 That is not a text channel!');
+					return;
+				}
+
+				if (array.includes(id)) {
+					await interaction.reply('🙁 I\'m already listening to that channel!');
+				} else {
+					array.push(id);
+					(await guild.update({ channels: toArray(array) })).reload();
+					await interaction.reply('🔔 Now listening to <#' + id + '>');
+				}
+				break;
 			}
+			case 'remove': {
+				const { id } = interaction.options.getChannel('channel', true);
+				const array = fromArray(channels);
 
-			if (array.includes(id)) {
-				await interaction.reply('🙁 I\'m already listening to that channel!');
-			} else {
-				array.push(id);
-				(await guild.update({ channels: toArray(array) })).reload();
-				await interaction.reply('🔔 Now listening to <#' + id + '>');
+				if (array.includes(id)) {
+					delete array[id];
+					(await guild.update({ channels: toArray(array) })).reload();
+					await interaction.reply('🔕 No longer listening to <#' + id + '>');
+				} else {
+					await interaction.reply('🙁 Seems like I do not listen to that channel. Did you intend to ' + mentionCommand(client, 'channels add') + ' it instead?');
+				}
+				break;
 			}
-			break;
-		}
-		case 'remove': {
-			const { id } = interaction.options.getChannel('channel', true);
-			const array = fromArray(channels);
+			case 'list': {
+				const array = fromArray(channels);
 
-			if (array.includes(id)) {
-				delete array[id];
-				(await guild.update({ channels: toArray(array) })).reload();
-				await interaction.reply('🔕 No longer listening to <#' + id + '>');
-			} else {
-				await interaction.reply('🙁 Seems like I do not listen to that channel. Did you intend to ' + mentionCommand(client, 'channels add') + ' it instead?');
+				if (array.length === 0) {
+					await interaction.reply('🙁 I\'m not listening to any channels!');
+				} else {
+					const embed = new MessageEmbed();
+					embed.setTitle('Listened channels (' + array.length + ')');
+					embed.setColor('Blurple');
+
+					embed.setDescription(buildList(array, false));
+
+					await interaction.reply({ embeds: [embed] });
+				}
+				break;
 			}
-			break;
-		}
-		case 'list': {
-			const array = fromArray(channels);
-
-			if (array.length === 0) {
-				await interaction.reply('🙁 I\'m not listening to any channels!');
-			} else {
-				const embed = new MessageEmbed();
-				embed.setTitle('Listened channels (' + array.length + ')');
-				embed.setColor('Blurple');
-
-				embed.setDescription(buildList(array, false));
-
-				await interaction.reply({ embeds: [ embed ] });
-			}
-			break;
-		}
 		}
 	},
 };

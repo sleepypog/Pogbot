@@ -33,7 +33,7 @@ export default class Database {
 		this.guilds = this.sequelize.define('guild', Guild, {
 			timestamps: false
 		});
-		
+
 		this.members = this.sequelize.define('member', Member, {
 			timestamps: false
 		});
@@ -59,9 +59,9 @@ export default class Database {
 	}
 
 	/**
- 	* Get or create an Pogbot guild from its id.
- 	* @param {string} id
- 	*/
+	 * Get or create an Pogbot guild from its id.
+	 * @param {string} id
+	 */
 	async getGuild(id) {
 		const [guild] = await this.guilds.findOrCreate({
 			where: {
@@ -77,7 +77,7 @@ export default class Database {
 
 		return guild;
 	}
-	
+
 	/**
 	 * Get or create an Pogbot member.
 	 * @param {string} guild
@@ -105,8 +105,8 @@ export default class Database {
 
 	/**
 	 * Get the top members for an guild.
-	 * @param {string} guild 
-	 * @param {number?} count 
+	 * @param {string} guild
+	 * @param {number?} count
 	 */
 	async getTopMembers(guild, count) {
 		return await this.members.findAll({

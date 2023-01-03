@@ -1,10 +1,12 @@
 import { canManageGuild } from '../utils/commandUtils.js';
+import { Pogbot } from '../Pogbot.js';
 
 /**
- * @param {import("../bot.js").default} client
  * @param {import("discord.js").CommandInteraction} interaction
  */
-export default async function (client, [interaction]) {
+export default async function ([interaction]) {
+	const client = Pogbot.instance;
+
 	const { commandName } = interaction;
 
 	if (client.commands.has(commandName)) {
@@ -22,6 +24,6 @@ export default async function (client, [interaction]) {
 			command.autocomplete(client, interaction);
 		}
 	} else {
-		client.logger.error('Command %s does not have an handler!', commandName);
+		client.logger.error(`Command ${commandName} does not have an handler!`);
 	}
 }

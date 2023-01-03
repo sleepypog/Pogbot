@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 
-import Bot from './bot.js';
+import { Pogbot } from './Pogbot.js';
 
 config();
-new Bot();
+new Pogbot();

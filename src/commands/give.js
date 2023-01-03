@@ -1,5 +1,5 @@
 /**
- * @type {import("../types").Command}
+ * @type {import("../types/index.d.ts").Command}
  */
 export default {
 	guildOnly: true,
@@ -30,7 +30,7 @@ export default {
 		await member.reload();
 
 		await interaction.reply({
-			content: 'Gave ' + amount + ' points to <@' + id + '>',		
+			content: 'Gave ' + amount + ' points to <@' + id + '>',
 		});
 	}
 };

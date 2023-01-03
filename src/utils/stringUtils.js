@@ -3,6 +3,7 @@ import ms from 'ms';
 /**
  * Milliseconds to human-friendly format.
  * @param {number} milliseconds
+ * @return {string}
  */
 export function toDuration(milliseconds) {
 	return ms(milliseconds);
@@ -10,20 +11,24 @@ export function toDuration(milliseconds) {
 
 /**
  * Number to human-friendly place emoji.
- * @param {number} number 
+ * @param {number} number
  */
 export function asPlaceEmoji(number) {
 	switch (number) {
-	case 1: return ':first_place:';
-	case 2: return ':second_place:';
-	case 3: return ':third_place:';
-	default: return '';
+	case 1:
+		return ':first_place:';
+	case 2:
+		return ':second_place:';
+	case 3:
+		return ':third_place:';
+	default:
+		return '';
 	}
 }
 
 /**
- * Build an numbered list from an array.
- * @param {string[]} array 
+ * Build a numbered list from an array.
+ * @param {string[]} array
  * @param {boolean?} numbered
  */
 export function buildList(array, numbered = true) {
@@ -33,7 +38,7 @@ export function buildList(array, numbered = true) {
 		}).join('\n');
 	} else {
 		return array.map((value) => {
-			return `${value}`;
+			return `- ${value}`;
 		}).join('\n');
 	}
 }

@@ -1,6 +1,6 @@
-import { Client, Collection, Intents } from 'discord.js';
+import { Client, Collection, Intents, Options } from 'discord.js';
 import Database from './data/database.js';
-import { readdir } from 'fs/promises';
+import { readdirSync } from 'fs';
 import { buildData } from './utils/commandUtils.js';
 import { createLogger, format, transports } from 'winston';
 
@@ -10,15 +10,17 @@ import messageListener from './listeners/messageCreate.js';
 
 export default class Bot extends Client {
 
+	static instance;
+
 	database;
 
 	/**
-	 * @type {Collection<string, import('./types/index.js').Command>}
+	 * @type {Collection<string, import('discord.js').ApplicationCommand>}
 	 */
 	commands;
 
 	/**
-	 * @type {Collection<string, import('./types/index.js').Listener}
+	 * @type {Collection<string, import('./types').Listener>}
 	 */
 	pogListeners;
 
@@ -38,8 +40,14 @@ export default class Bot extends Client {
 						type: 'COMPETING'
 					}
 				]
-			}
+			},
+			makeCache: Options.cacheWithLimits({
+				...Options.defaultMakeCacheSettings,
+				ReactionManager: 0,
+			})
 		});
+
+		Bot.setInstance(this);
 
 		this.logger = createLogger({
 			format: format.combine(
@@ -48,7 +56,7 @@ export default class Bot extends Client {
 			),
 			transports: [
 				new transports.Console({
-					level: 'debug'
+					level: 'silly'
 				})
 			]
 		});
@@ -69,47 +77,39 @@ export default class Bot extends Client {
 
 	}
 
+	static getInstance() {
+		return this.instance;
+	}
+
+	static setInstance(bot) {
+		if (this.instance === undefined) {
+			this.instance = bot;
+		} else {
+			throw new Error('Bot.instance is already defined!');
+		}
+	}
+
 	/**
 	 * @private
 	 */
 	registerCommands() {
-		this.logger.silly('Registering commands');
-		readdir('./src/commands').then((commands) => {
-			for (const command of commands) {
-				if (command.endsWith('.js')) {
-					import('./commands/' + command).then(({ default: module }) => {
-						this.commands.set(command.replace('.js', ''), module);
-						this.logger.silly('Registering command ' + module.data.name);
-						this.application.commands.create(buildData(module).data).then((data) => {
-							module._commandId = data.id;
-							this.logger.silly('Registered command ' + module.data.name + ', version ' + data.version);
-						});
-					});
-				}
-			}
+		this.logger.debug('Registering commands');
+		const files = readdirSync('./src/commands').filter((filename) => {
+			return filename.endsWith('.js');
 		});
-	}
 
-	/*
-	async registerEventListeners() {
-		this.logger.silly('Registering event listeners');
-		readdir('./src/listeners').then((listeners) => {
-			for (const listener of listeners) {
-				if (listener.endsWith('.js')) {
-					import('./listeners/' + listener).then(({ default: module }) => {
-						this.on(listener.replace('.js', ''), (...args) => {
-							return module(this, args);
-						});
-						this.logger.silly('Registered listener ' + listener);
-					});
-				}
-			}
-		});
+		for (const file of files) {
+			import('./commands/' + file).then(({ default: module }) => {
+				this.commands.set(module.data.name, module);
+				this.application.commands.create(buildData(module).data).then((command) => {
+					module._commandId = command.id;
+					this.logger.silly(`Registered command ${module.data.name}, version ${command.version}`);
+				});
+			});
+		}
 	}
-	*/
 
 	/**
-	 * Temporal workaround while I figure out what is going on with the other method.
 	 * @private
 	 */
 	registerEventListeners() {
@@ -117,9 +117,9 @@ export default class Bot extends Client {
 		this.on('messageCreate', (message) => {
 			return messageListener(this, message);
 		});
-		this.on('interactionCreate', (interaction) => { 
+		this.on('interactionCreate', (interaction) => {
 			// array for compatibility with the existing method.
-			return interactionListener(this, [ interaction ]);
+			return interactionListener(this, [interaction]);
 		});
 	}
 }
