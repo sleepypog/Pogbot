@@ -1,4 +1,8 @@
 {
   "version": "1.1.2",
-  "commit": "0e18887"
+  "timestamp": "2023-01-19T18:18:19.454Z",
+  "vcs": {
+    "commit": "817a845",
+    "branch": "1.2-new"
+  }
 }

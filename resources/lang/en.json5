@@ -1,0 +1,40 @@
+{
+  // This is a localization file for Pogbot.
+
+  common: {
+    // Name for this language.
+    language: 'English',
+
+    // Localized name for this language.
+    localizedLanguageName: 'English'
+  },
+
+  description: {
+    about: 'See some stats for the bot.'
+  },
+
+  reply: {
+    award: {
+
+    },
+    about: {
+      title: 'About {{me}}',
+      body: 'Pogbot is an open-sourced bot meant for counting user reactions.',
+      uptime: 'Client Uptime',
+      guilds: 'Guilds',
+      guildcount_one: '{{count}} guild',
+      guildcount_other: '{{count}} guilds',
+      version: 'Version',
+      commit: '(commit {{commit}})'
+    }
+  },
+
+  error: {
+    // Usually thrown when the bot token is invalid or missing.
+    cannotLogin: 'Could not login: {{error}}',
+
+    // Usually thrown when the bot is lacking permissions to send messages or react to them.
+    cannotInteract: 'Could not interact with channel, continuing: {{error}}'
+  },
+
+}

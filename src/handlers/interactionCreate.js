@@ -1,4 +1,4 @@
-import { canManageGuild } from '../utils/commandUtils.js';
+import { canManage } from '../utils/index.js';
 import { Pogbot } from '../Pogbot.js';
 
 /**
@@ -13,8 +13,8 @@ export default async function ([interaction]) {
 		const command = client.commands.get(commandName);
 
 		if (interaction.isCommand()) {
-			if (command.requireAdmin) {
-				if (!canManageGuild(interaction.member)) {
+			if (command.restrictions.isAdminOnly) {
+				if (!canManage(interaction.member)) {
 					return await interaction.reply('This command is limited to administrators only!');
 				}
 			}
