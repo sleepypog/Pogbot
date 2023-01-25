@@ -25,7 +25,10 @@
       guildcount_one: '{{count}} guild',
       guildcount_other: '{{count}} guilds',
       version: 'Version',
-      commit: '(commit {{commit}})'
+      build: 'Build',
+      commit: 'Commit `{{commit}}`',
+      branch: 'Branch `{{branch}}`',
+      time: 'Built at {{time}}'
     }
   },
 

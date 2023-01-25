@@ -10,11 +10,6 @@ export interface Command {
     readonly name: string;
 
     /**
-     * Description of this command.
-     */
-    readonly description: string;
-
-    /**
      * Represents the execution limits this command has.
      */
     readonly restrictions: Restrictions;

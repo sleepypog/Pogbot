@@ -7,7 +7,7 @@
 		"builddata": "node ./scripts/generateBuildData.mjs",
 		"build": "tsc",
 		"lint": "eslint . --fix && prettier --write .",
-		"dev": "ts-node ./src/index.ts --experimental-specifier-resolution=node"
+		"dev": "node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -31,6 +31,7 @@
 		"sequelize": "^6.28.0",
 		"sequelize-typescript": "^2.1.5",
 		"umzug": "^3.2.1",
+		"uninstall": "^0.0.0",
 		"winston": "^3.8.2"
 	},
 	"devDependencies": {

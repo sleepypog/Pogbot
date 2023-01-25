@@ -1,16 +1,16 @@
 import { Client, Intents, Options, Constants, Collection } from 'discord.js';
-import { Logger, format, transports } from 'winston';
+import winston from 'winston';
 
 import { readdirSync } from 'fs';
 
 import { PogListener } from './object/PogListener.js';
 import { FinalizedCommand } from './object/command';
 import { Translation } from './object/Translation.js';
-// TODO: Get this working as an directory import
+import { DiscordHandler, EventKind } from './object/DiscordHandler';
+
 import { finalize } from './utils';
 import { Storage } from './data';
 import { AlreadyInitializedError } from './errors.js';
-import { DiscordHandler } from './object/DiscordHandler';
 
 export class Pogbot extends Client {
 
@@ -21,7 +21,6 @@ export class Pogbot extends Client {
     private static _instance: Pogbot;
 
     /**
-     * Use the {@link translator} getter/setter instead.
      * @internal
      */
     private _translator: Translation;
@@ -80,19 +79,20 @@ export class Pogbot extends Client {
                 // TODO: string
                 this._logger.info(Translation.of(''))
 			}).catch((error: Error) => {
-                // TODO: string
-                this._logger.error(Translation.of(''))
+                this._logger.error(Translation.of('error.cannotLogin', {
+                    error: error
+                }))
 			})
     }
 
     private setupLogger(): Logger {
-        return new Logger({
-            format: format.combine(
-                format.colorize(),
-                format.splat(),
-                format.simple()
+        return new winston.Logger({
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.splat(),
+                winston.format.simple()
             ),
-            transports: [ new transports.Console ]
+            transports: [ new winston.transports.Console ]
         });
     }
 
@@ -111,13 +111,18 @@ export class Pogbot extends Client {
             import('./handlers/' + file).then(({ default: module }) => {
                 const { name, kind, execute }: DiscordHandler = module;
 
+                if (kind === EventKind.ONCE) {
+                    this.prependOnceListener(name, (data?: unknown) => execute(this, data));
+                } else {
+                    this.prependListener(name, (data?: unknown) => execute(this, data));
+                }
+
+                this.logger.debug('Registered handler %s', name)
             });
         }
     }
 
 	private setupCommands(): void {
-		this.logger.debug('Registering commands');
-
 		const files = readdirSync('./commands').filter((filename) => {
 			return filename.endsWith('.js');
 		});
@@ -129,7 +134,7 @@ export class Pogbot extends Client {
 				this.commands.set(name, module);
 				this.application?.commands.create(_json).then((command) => {
                     module._id = command.id;
-					this.logger.silly(`Registered command ${name}, version ${command.version}`);
+					this.logger.debug('Registered command %s %s', name, command.version);
 				});
 			});
 		}
@@ -147,7 +152,7 @@ export class Pogbot extends Client {
     }
 
     static get instance(): Pogbot {
-        return Pogbot._instance;
+        return this._instance;
     }
 
     static set instance(bot) {
@@ -168,3 +173,6 @@ export class Pogbot extends Client {
             throw new AlreadyInitializedError('Pogbot#storage');
     }
 }
+
+// winston logger type helper
+export type Logger = winston.Logger

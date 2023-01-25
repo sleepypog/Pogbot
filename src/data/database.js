@@ -1,8 +1,11 @@
 import { Sequelize } from 'sequelize';
 
-import Guild from './models/guild.js';
+import Guild from './models/Guild.ts';
 import Member from './models/member.js';
 
+/**
+ * @deprecated
+ */
 export default class Database {
 	/**
 	 * Please use the methods in the Database class or individual models instead.

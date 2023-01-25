@@ -7,7 +7,10 @@
 	},
 	"compilerOptions": {
 		"incremental": true,
+
+		"experimentalDecorators": true,
+
 		"module": "esnext",
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
 	}
 }

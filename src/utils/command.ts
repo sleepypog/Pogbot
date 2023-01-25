@@ -1,8 +1,9 @@
 import { GuildMember, Permissions } from 'discord.js';
 
-import { Command, FinalizedCommand } from '../object/command/Command'
+import { Command, FinalizedCommand } from '../object/command'
 import { CommandFinalizationError } from '../errors.js';
 import { Pogbot } from '../Pogbot.js';
+import { Translation } from '../object/Translation';
 
 /**
  * Finalize a command by adding permissions and restrictions.
@@ -14,7 +15,7 @@ export function finalize(initial: Command): FinalizedCommand {
 	const { isAdminOnly, isGuildOnly } = cmd.restrictions;
 	const basicInfo = {
 		name: cmd.name,
-		description: cmd.description
+		description: Translation.of('description.' + cmd.name)
 	};
 
 	cmd._json = { ...basicInfo, ...cmd.additionalData }

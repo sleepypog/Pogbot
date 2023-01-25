@@ -1,16 +1,13 @@
 import { Command } from '../object/command/Command';
 import { MessageEmbed, version } from 'discord.js';
 
-import { duration, list } from '../utils';
-import * as build from '../../build.json' assert {
-    type: 'json'
-};
+import { BUILD_BRANCH, BUILD_COMMIT, BUILD_TIME, BUILD_VERSION, duration, list } from '../utils';
+import { Translation } from '../object/Translation';
 
 // TODO: Strings
 
 export default <Command> {
     name: 'about',
-    description: 'See some stats for the bot.',
     restrictions: {
         enabled: true,
         isGuildOnly: false,
@@ -18,25 +15,41 @@ export default <Command> {
     },
     run: async ({  client, interaction }) => {
         const embed = new MessageEmbed()
-            .setTitle(`About ${client.user?.username}`)
-            .setDescription('Pogbot is an open-sourced bot meant for counting user reactions.')
+            .setTitle(Translation.of('reply.about.title'))
+            .setDescription(Translation.of('reply.about.body'))
             .setColor('BLURPLE')
             .addFields([
                 {
-                    name: 'Client Uptime',
+                    name: Translation.of('reply.about.uptime'),
                     value: duration(Date.now() - (client.uptime as number))
                 },
                 {
-                    name: 'Guilds',
-                    value: `${client.guilds.cache.size} guilds`
+                    name: Translation.of('reply.about.guilds'),
+                    value: Translation.of('reply.about.guildcount', {
+                        count: client.guilds.cache.size
+                    })
                 },
                 {
-                    name: 'Version',
+                    name: Translation.of('reply.about.version'),
                     value: list([
-                        `Pogbot ${build.version} (commit ${build.vcs.commit})`,
+                        `Pogbot ${BUILD_VERSION}`,
                         `Node.js ${process.version}`,
                         `Discord.js ${version}`
                     ], false)
+                },
+                {
+                    name: Translation.of('reply.about.build'),
+                    value: list([
+                        Translation.of('reply.about.commit', {
+                            commit: BUILD_COMMIT
+                        }),
+                        Translation.of('reply.about.branch', {
+                            branch: BUILD_BRANCH
+                        }),
+                        Translation.of('reply.about.time', {
+                            time: BUILD_TIME
+                        }),
+                    ])
                 }
             ])
 

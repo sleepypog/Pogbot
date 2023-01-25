@@ -1,7 +1,19 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { Umzug } from 'umzug';
+import { Context } from 'vm';
+
+import { Pogbot } from '../Pogbot.js';
+import { AlreadyInitializedError } from '../errors';
+import { Member } from './models/Member.js';
+import { Guild } from './models/Guild.js';
 
 export class Storage {
+
+    /**
+     * Use the {@link instance} getter/setter instead.
+     * @internal
+     */
+    private static _instance: Storage;
 
     /**
      * @internal
@@ -14,8 +26,10 @@ export class Storage {
     private _umzug: Umzug;
 
     constructor() {
-        this.setupSequelize();
-        this.setupUmzug();
+        Storage.instance = this;
+
+        this._sequelize = this.setupSequelize();
+        this._umzug = this.setupUmzug();
     }
 
     private setupSequelize(): Sequelize {
@@ -27,13 +41,39 @@ export class Storage {
                     require: true,
                     rejectUnauthorized: false
                 }
-            }
+            },
+            models: [ Guild, Member ]
         })
     }
 
     private setupUmzug(): Umzug {
         return new Umzug({
-            migrations
+            migrations: {
+                glob: './migrations/*.js'
+            },
+            context: this._sequelize.getQueryInterface() as Context,
+            logger: Pogbot.instance.logger
         });
     }
+
+    /**
+     * Umzug type helper
+     * @internal
+     */
+    get migrationType() {
+        return this._umzug._types.migration;
+    }
+
+    static get instance(): Storage {
+        return this._instance;
+    }
+
+    static set instance(db) {
+        if (this._instance === undefined)
+            this._instance = db;
+        else
+            throw new AlreadyInitializedError('Pogbot#instance');
+    }
 }
+
+export type Migration = typeof Storage.instance.migrationType;
