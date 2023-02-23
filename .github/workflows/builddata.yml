@@ -1,4 +1,4 @@
-name: 'Pogbot: Generate BuildData'
+name: 'Generate builddata 👷'
 
 on:
   pull_request:
