@@ -1,4 +1,4 @@
-name: "Pogbot: Lint 🧑‍💻"
+name: "Lint-n-Style 🧑‍💻"
 
 on:
   push:
