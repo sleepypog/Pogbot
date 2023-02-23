@@ -1,4 +1,4 @@
-name: "Pogbot: Code Style"
+name: "Pogbot: Lint 🧑‍💻"
 
 on:
   push:
@@ -14,10 +14,12 @@ jobs:
         node-version: [16.x]
     steps:
     - uses: actions/checkout@v3
-    - name: Setup Node.js ${{ matrix.node-version }}
+    - name: "NPM: Setup Node.js"
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run lint
+        cache: "npm"
+    - name: "NPM: Install dependencies"
+      run: npm ci
+    - name: "NPM: Enforce code style"
+      run: npm run lint
